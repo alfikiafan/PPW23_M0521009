@@ -13,11 +13,9 @@ class MedicineController extends Controller
     public function index(Request $request): View
     {
         $search = $request->input('search');
-        $sortQty = $request->input('qty') === '' ? null : $request->input('qty');
-        $sortDisc = $request->input('disc') === '' ? null : $request->input('disc');
-        $sortPrice = $request->input('price') === '' ? null : $request->input('price');
 
-        $medicines = DB::table('medicines');
+        $medicines = DB::table('medicines')
+            ->where('deleted_at', null);
 
         if ($search) {
             $medicines = $medicines
@@ -30,23 +28,8 @@ class MedicineController extends Controller
                 ->orWhere('price', 'like', "%$search%");
         }
 
-        if ($sortQty) {
-            $medicines = $medicines->orderBy('quantity', $sortQty);
-        }
-
-        if ($sortDisc) {
-            $medicines = $medicines->orderBy('discount', $sortDisc);
-        }
-
-        if ($sortPrice) {
-            $medicines = $medicines->orderBy('price', $sortPrice);
-        }
-
         $medicines = $medicines->paginate(8)->appends([
             'search' => $search,
-            'qty' => $sortQty,
-            'disc' => $sortDisc,
-            'price' => $sortPrice,
         ]);
 
         return view('medicines.index', compact('medicines'));

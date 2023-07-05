@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -86,33 +87,35 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'photo' => 'image|mimes:jpg,jpeg,png',
         ]);
-    
+
         // Mengambil data dari request
         $data = $request->only(['name', 'email']);
-    
+
         // Jika password baru tidak kosong, validasi password baru
         if (!empty($request->input('password'))) {
             $request->validate([
                 'password' => 'required',
             ]);
-    
+
             $data['password'] = bcrypt($request->input('password'));
         }
-    
+
         if ($request->hasFile('photo')) {
-            $request->validate([
-                'photo' => 'image|mimes:jpg,jpeg,png',
-            ]);
-        
+            // Menghapus foto lama jika ada
+            if ($user->photo) {
+                Storage::delete($user->photo);
+            }
+
             $path = $request->file('photo')->store('public/img/avatar');
             $filename = str_replace('public/', 'storage/', $path);
-            $user->photo = $filename;
+            $data['photo'] = $filename;
         }
-    
+
         // Update data pengguna hanya jika validasi berhasil
         $success = $user->update($data);
-    
+
         if ($success) {
             return redirect()->route('profile.index')->with('success', 'Profile updated successfully.');
         } else {

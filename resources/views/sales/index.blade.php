@@ -1,20 +1,3 @@
-@php
-    // Hello, I'm from medicines/index.blade.php, please also move me somewhere not there
-    function sortQueryBuilder($key){
-            // Directions of orderBy function
-        $directions = [
-            '' => 'asc',
-            'asc' => 'desc',
-            'desc' => ''
-        ];
-        $def = request()->except($key); // default request except the one we want to change
-        $dir = request($key); // get the direction of the request
-        $newDir = $directions[$dir]; // get the new direction
-        $newQuery = $newDir === ''? []:[$key=>$newDir]; // if the new direction is empty, then we don't need to add it to the query
-
-        return array_merge($def,$newQuery); // merge the default query with the new query [] if the new direction is empty
-    }
-@endphp
 @extends('layouts.app')
 @can('admin')
     @section('content')
@@ -61,36 +44,24 @@
                                     <thead class="bg-gray-100">
                                     <tr>
                                         <th class="text-xs font-weight-semibold">
-                                            <a class="text-secondary" href="{{route('sales.index', sortQueryBuilder('saleId'))}}">
+                                            <a class="text-secondary" href="{{route('sales.index')}}">
                                                 <span>Sales ID</span>
-                                                @if(request('saleId')!=='')
-                                                    <i class="fa fa-sort-amount-{{request('saleId')}}" aria-hidden="true"></i>
-                                                @endif
                                             </a>
                                         </th>
                                         <th class="text-xs font-weight-semibold">
-                                            <a class="text-secondary" href="{{route('sales.index', sortQueryBuilder('date'))}}">
+                                            <a class="text-secondary" href="{{route('sales.index')}}">
                                                 <span>Date</span>
-                                                @if(request('date')!=='')
-                                                    <i class="fa fa-sort-amount-{{request('date')}}" aria-hidden="true"></i>
-                                                @endif
                                             </a>
                                         </th>
                                         <th class="text-secondary text-xs font-weight-semibold">Cashier</th>
                                         <th class="text-xs font-weight-semibold">
-                                            <a class="text-secondary" href="{{route('sales.index', sortQueryBuilder('totalPrice'))}}">
+                                            <a class="text-secondary" href="{{route('sales.index')}}">
                                                 <span>Total Price</span>
-                                                @if(request('totalPrice')!=='')
-                                                    <i class="fa fa-sort-amount-{{request('totalPrice')}}" aria-hidden="true"></i>
-                                                @endif
                                             </a>
                                         </th>
                                         <th class="text-xs font-weight-semibold">
-                                            <a class="text-secondary" href="{{route('sales.index', sortQueryBuilder('status'))}}">
+                                            <a class="text-secondary" href="{{route('sales.index')}}">
                                                 <span>Status</span>
-                                                @if(request('status')!=='')
-                                                    <i class="fa fa-sort-amount-{{request('status')}}" aria-hidden="true"></i>
-                                                @endif
                                             </a>
                                         </th>
                                         <th class="text-secondary text-xs font-weight-semibold">Action</th>

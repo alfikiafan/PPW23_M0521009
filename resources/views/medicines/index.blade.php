@@ -1,21 +1,3 @@
-@php
-// move this to somewhere not there
-function sortQueryBuilder($key){
-    // Directions of orderBy function
-    $directions = [
-        '' => 'asc',
-        'asc' => 'desc',
-        'desc' => ''
-    ];
-
-    $def = request()->except($key); // default request except the one we want to change
-    $dir = request($key); // get the direction of the request
-    $newDir = $directions[$dir]; // get the new direction
-    $newQuery = $newDir === ''? []:[$key=>$newDir]; // if the new direction is empty, then we don't need to add it to the query
-
-    return array_merge($def,$newQuery); // merge the default query with the new query [] if the new direction is empty
-}
-@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -72,27 +54,18 @@ function sortQueryBuilder($key){
                       <th class="text-secondary text-xs font-weight-semibold">Brand</th>
                       <th class="text-secondary text-xs font-weight-semibold">Category</th>
                       <th class="text-xs font-weight-semibold">
-                          <a class="text-secondary" href="{{route('medicines.index', sortQueryBuilder('qty'))}}">
+                          <a class="text-secondary" href="{{route('medicines.index')}}">
                               <span>Quantity</span>
-                              @if(request('qty')!=='')
-                                  <i class="fa fa-sort-amount-{{request('qty')}}" aria-hidden="true"></i>
-                              @endif
                           </a>
                       </th>
                       <th class="text-xs font-weight-semibold">
-                          <a class="text-secondary" href="{{route('medicines.index', sortQueryBuilder('disc'))}}">
+                          <a class="text-secondary" href="{{route('medicines.index')}}">
                               <span>Discount</span>
-                              @if(request('disc')!=='')
-                                  <i class="fa fa-sort-amount-{{request('disc')}}" aria-hidden="true"></i>
-                              @endif
                           </a>
                       </th>
                       <th class="text-xs font-weight-semibold">
-                          <a class="text-secondary" href="{{route('medicines.index',sortQueryBuilder('price'))}}">
+                          <a class="text-secondary" href="{{route('medicines.index')}}">
                               <span>Price</span>
-                              @if(request('price')!=='')
-                                  <i class="fa fa-sort-amount-{{request('price')}}" aria-hidden="true"></i>
-                              @endif
                           </a>
                       </th>
                         @can('admin')
@@ -118,7 +91,7 @@ function sortQueryBuilder($key){
                       @can('admin')
                         <td class="ps-3">
                           <div class="d-flex align-items-center">
-                            <a href="{{ route('medicines.edit', $medicine) }}">
+                            <a href="{{ route('medicines.edit', $medicine->id) }}">
                               <button type="button" class="btn btn-sm btn-primary mb-0 me-1">
                                 <i class="fas fa-pencil-alt"></i>
                               </button>
