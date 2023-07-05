@@ -27,19 +27,21 @@ class SessionsController extends Controller
 
         if (!auth()->attempt($attributes)) {
             throw ValidationException::withMessages([
-                'email' => 'Email salah. Ulangi lagi.',
-                'password' => 'Passwordmu salah. Ulangi lagi.'
+                'email' => 'Your email is wrong, please try again.',
+                'password' => 'Your password is wrong, please try again.'
             ]);
         }
 
 
-        session()->regenerate(); // session fixation
-        return redirect('/')->with('success', 'Welcome Back!');
+        session()->regenerate();
+        return redirect('/')->with('success', 'You\'re logged in');
     }
 
-    public function destroy(): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
         auth()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/')->with('success', 'Goodbye!');
     }
 }
