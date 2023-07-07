@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Sale;
 use App\Models\Medicine;
 use App\Models\DetailSale;
@@ -14,13 +15,8 @@ class SaleController extends Controller
 {
     public function index() :View|RedirectResponse
     {
-        if(auth()->user()->can('admin')){
+        if(Gate::allows('admin')){
             $search = request()->input('search');
-            $saleId = request()->input('saleId');
-            $totalPrice = request()->input('totalPrice');
-            $date = request()->input('date');
-            $status = request()->input('status');
-
             $sales = Sale::query();
 
             if ($search) {
@@ -34,26 +30,11 @@ class SaleController extends Controller
                             ->orWhere('email', 'like', "%$search%");
                     });
             }
-            if($status){
-                $sales = $sales->orderBy('is_success', $status);
-            }
-
-            if($saleId){
-                $sales = $sales->orderBy('id', $saleId);
-            }
-
-            if($totalPrice){
-                $sales = $sales->orderBy('total', $totalPrice);
-            }
-
-            if($date){
-                $sales = $sales->orderBy('created_at', $date);
-            }
 
             $sales = $sales->paginate(8);
 
             return view('sales.index', compact('sales'));
-        } else if(auth()->user()->can('cashier')){
+        } else if(Gate::allows('cashier')){
             $sales = Sale::with('detailSales', 'detailSales.medicine')->get();
             $medicines = Medicine::all();
             $lastId = Sale::max('id');
@@ -66,7 +47,7 @@ class SaleController extends Controller
             }
             return view('sales.index', compact('sales', 'medicines', 'newId'));
         } else{
-            return redirect('/');
+            return redirect('404', 'Not Found');
         }
     }
 

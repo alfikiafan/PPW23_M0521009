@@ -76,7 +76,7 @@
                                     <div
                                         class="blur mt-12 p-4 text-center border border-white border-radius-md position-absolute fixed-bottom m-4">
                                         <h2 class="mt-3 text-dark font-weight-bold">Empowering healthier futures, together.</h2>
-                                        <h6 class="text-dark text-sm mt-5">This application is only part of a larger project, which is only done by Alfiki. Other parts that I did not work on, I do not include. It's been allowed by my team.</h6>
+                                        <h6 class="text-dark text-sm mt-5">This application is only part of a larger project, which is only done by Alfiki. I do not include other parts that I did not work on.</h6>
                                     </div>
                                 </div>
                             </div>

@@ -122,7 +122,7 @@ class UserController extends Controller
             return redirect()->route('profile.edit', $user->id)->withErrors('Profile failed to update.');
         }
     }
-    
+
     function showDashboard(User $user)
     {
         $user = auth()->user();
